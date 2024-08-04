@@ -7,10 +7,10 @@ const useGetUserRole = (userId) => {
     const [admin,setAdmin]=useState(false);
 
     useEffect(()=>{
-        getUserById(userId)
-        .then((result)=>{
-            setAdmin(result.user.admin);
-        });
+        // getUserById(userId)
+        // .then((result)=>{
+        //     setAdmin(result.user.admin);
+        // });
     },[userId]);
 
   return [admin];

@@ -4,7 +4,7 @@ import { Box, Icon, Text, Container, SimpleGrid, Image, CircularProgress } from 
 import { AccountBalanceWallet, AssignmentReturn, WorkspacePremium } from '@mui/icons-material';
 import  ProductItem from '../components/Home/ProductItem';
 import Carousel from '../components/Carousel';
-import { getAllMiniImages } from '../services/ImageServices';
+import { getAllProducts } from '../services/ProductServices';
 import { useSearchContext } from '../contexts/SearchContext';
 import UpcomingItem from '../components/Home/UpcomingItem';
 
@@ -15,30 +15,16 @@ const Home = () => {
   const [miniImages, setMiniImages] = useState([]);
 
   useEffect(() => {
-    // getAllMiniImages()
-    //   .then((result) => {
-    //     setMiniImages(result.miniImages);
-    //   });
-
-      setMiniImages([{
-        url : "https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg"
-      },
-      {
-        url : "https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg"
-      },
-      {
-        url : "https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg"
-      },
-      {
-        url : "https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg"
-      }
-    
-    ])
+    getAllProducts()
+      .then((result) => {
+        console.log(result)
+        setMiniImages(result.allProducts)
+      });
   }, []);
 
-  const onClickImage = () => {
+  const onClickImage = (productId) => {
     setSearch('a');
-    navigate('/search');
+    navigate(`/product/${productId}`, { state: { productId} });
   }
 
   return (
@@ -54,7 +40,7 @@ const Home = () => {
   <Text textAlign="right" decoration="underline" fontWeight="bold" width='95%'> 
     Xem Tất Cả
   </Text>
-  <SimpleGrid 
+  {/* <SimpleGrid 
         columns={{ base: 1, sm: 2, md: 4 }} 
         spacing={{ base: 3, md: 5 }} 
         px={{ base: 3, md: 0 }} 
@@ -65,10 +51,11 @@ const Home = () => {
       >
         {
           miniImages && miniImages.map((image, index) => (
-            <UpcomingItem key={index} url={image.url} />
+            <UpcomingItem key={index} onClick={(onClickImage)
+            }  url={image.url} />
           ))
         }
-    </SimpleGrid>
+    </SimpleGrid> */}
          
 
 
@@ -87,7 +74,7 @@ const Home = () => {
       >
         {
           miniImages && miniImages.map((image, index) => (
-            <ProductItem key={index} url={image.url} />
+            <ProductItem key={index} onClick={() => onClickImage(image._id)} data={image} />
           ))
         }
         

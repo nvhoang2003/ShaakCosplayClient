@@ -11,10 +11,10 @@ const Dropdown = ({ title, genreId }) => {
     const [categories,setCategories]=useState([]);
 
     useEffect(()=>{
-        getCategoryByGenre(genreId)
-        .then(result=>{
-            setCategories(result.category);
-        });
+        // getCategoryByGenre(genreId)
+        // .then(result=>{
+        //     setCategories(result.category);
+        // });
     },[genreId]);
 
     const handleClick=(categoryId)=>{

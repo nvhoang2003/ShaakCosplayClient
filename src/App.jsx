@@ -26,7 +26,8 @@ import Categories from './components/Categories';
 const App = () => {
 
   const { currentUser } = useUserContext();
-  const [admin] = useGetUserRole(currentUser);
+  const [admin] = [] 
+  // useGetUserRole(currentUser);
 
   return (
     <>

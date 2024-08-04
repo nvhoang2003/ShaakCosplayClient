@@ -9,12 +9,13 @@ import Comment from '../components/Comment';
 import ReviewModal from '../components/ReviewModal';
 import { useCartContext } from '../contexts/CartContext';
 import { useUserContext } from '../contexts/UserContext';
-import useGetFavoriteStatus from '../hooks/useGetFavoriteStatus';
+// import useGetFavoriteStatus from '../hooks/useGetFavoriteStatus';
 import { getProductById } from '../services/ProductServices';
-import { addFavorite, deleteFavorite } from '../services/UserServices';
-import { getCommentByProductId } from '../services/CommentServices';
-import { getRatingByProductId } from '../services/RatingServices';
-import useGetUserHaveThis from '../hooks/useGetUserHaveThis';
+// import { addFavorite, deleteFavorite } from '../services/UserServices';
+// import { getCommentByProductId } from '../services/CommentServices';
+// import { getRatingByProductId } from '../services/RatingServices';
+// import useGetUserHaveThis from '../hooks/useGetUserHaveThis';
+import { useParams } from 'react-router-dom';
 
 
 const Product = () => {
@@ -24,128 +25,144 @@ const Product = () => {
   const { cart, setCart, refresh, setRefresh } = useCartContext();
   const { currentUser } = useUserContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [status] = useGetFavoriteStatus(currentUser, location.state.productId);
+  // const [status] = useGetFavoriteStatus(currentUser, location.state.productId);
   const [isFavorite, setIsFavorite] = useState(false);
   const [ratings, setRatings] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
   const [comments, setComments] = useState([]);
-  const [product, setProduct] = useState("");
   const [sizes, setSizes] = useState([]);
   const [selectedSize, setSelectedSize] = useState("");
   const [inCart, setInCart] = useState(false);
   const [amount, setAmount] = useState(0);
   const [cookies, setCookies, removeCookie] = useCookies(['cart']);
-  const [have] = useGetUserHaveThis(currentUser, location.state.productId);
+  // const [have] = useGetUserHaveThis(currentUser, location.state.productId);
+
+  // useEffect(() => {
+  //   setIsFavorite(status);
+
+  
+
+  //   getRatingByProductId(location.state.productId)
+  //     .then((result) => {
+  //       var star = 0;
+  //       result.ratings.forEach((r) => {
+  //         star += r.rating
+  //       });
+  //       setRatings(star / result.ratings.length || 0);
+  //       setRatingCount(result.ratings.length);
+  //     });
+
+  //   getCommentByProductId(location.state.productId)
+  //     .then((result) => {
+  //       setComments(result.comment);
+  //     });
+
+  //   cart.forEach((item) => {
+  //     if (item.id === location.state.productId) {
+  //       setInCart(true);
+  //       setAmount(item.amount);
+  //     }
+  //   });
+  // }, [location.state.productId, status, cart]);
+
+  // const onClickFavorite = () => {
+  //   if (isFavorite) {
+  //     deleteFavorite(currentUser, location.state.productId);
+  //     setIsFavorite(false);
+  //   } else {
+  //     addFavorite(currentUser, location.state.productId);
+  //     setIsFavorite(true);
+  //   }
+  // };
+
+  // const onClickAddCart = () => {
+  //   if (selectedSize !== "") {
+  //     const currentIndex = cart.findIndex(item => item.id === location.state.productId);
+  //     if (currentIndex >= 0) {
+  //       cart[currentIndex].amount += 1;
+  //       cart[currentIndex].price = product.price * cart[currentIndex].amount;
+  //       setAmount(amount + 1);
+  //       setCookies('cart', cart, { path: '/' });
+  //     } else {
+  //       setCart([...cart, {
+  //         id: location.state.productId,
+  //         amount: 1,
+  //         price: product.price
+  //       }]);
+  //       setCookies('cart', cart, { path: '/' });
+  //     }
+  //     setRefresh(!refresh);
+  //   } else {
+  //     toast({
+  //       title: 'Error!',
+  //       description: 'You must choose a size.',
+  //       status: 'error',
+  //       duration: 2000,
+  //       isClosable: true
+  //     });
+  //   }
+  // };
+
+  // const onClickRemoveCart = () => {
+  //   const currentIndex = cart.findIndex(item => item.id === location.state.productId);
+  //   if (currentIndex >= 0) {
+  //     if (cart[currentIndex].amount === 1) {
+  //       const newCart = new Array([]);
+  //       cart.forEach((item, index) => {
+  //         index !== currentIndex && newCart.push(item);
+  //       })
+  //       if (cart.length === 1) {
+  //         removeCookie('cart', { path: '/' });
+  //       } else {
+  //         setCookies('cart', newCart, { path: '/' });
+  //       }
+  //       setInCart(false);
+  //       setCart(newCart);
+  //       setAmount(amount - 1);
+  //     } else {
+  //       cart[currentIndex].price -= cart[currentIndex].price / cart[currentIndex].amount;
+  //       cart[currentIndex].amount -= 1;
+  //       setAmount(amount - 1);
+  //       setCookies('cart', cart, { path: '/' });
+  //     }
+  //   }
+  //   setRefresh(!refresh);
+  // };
+
+  // const onClickWrite = () => {
+  //   if (have) {
+  //     onOpen(true);
+  //   } else {
+  //     toast({
+  //       title: 'Error!',
+  //       description: 'You must have this to write a review.',
+  //       status: 'error',
+  //       duration: 2000,
+  //       isClosable: true
+  //     });
+  //   }
+  // };
+
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    setIsFavorite(status);
-
-    getProductById(location.state.productId)
-      .then((result) => {
-        setProduct(result.product);
-        setSizes(result.product.sizes);
-      });
-
-    getRatingByProductId(location.state.productId)
-      .then((result) => {
-        var star = 0;
-        result.ratings.forEach((r) => {
-          star += r.rating
-        });
-        setRatings(star / result.ratings.length || 0);
-        setRatingCount(result.ratings.length);
-      });
-
-    getCommentByProductId(location.state.productId)
-      .then((result) => {
-        setComments(result.comment);
-      });
-
-    cart.forEach((item) => {
-      if (item.id === location.state.productId) {
-        setInCart(true);
-        setAmount(item.amount);
-      }
-    });
-  }, [location.state.productId, status, cart]);
-
-  const onClickFavorite = () => {
-    if (isFavorite) {
-      deleteFavorite(currentUser, location.state.productId);
-      setIsFavorite(false);
-    } else {
-      addFavorite(currentUser, location.state.productId);
-      setIsFavorite(true);
-    }
-  };
-
-  const onClickAddCart = () => {
-    if (selectedSize !== "") {
-      const currentIndex = cart.findIndex(item => item.id === location.state.productId);
-      if (currentIndex >= 0) {
-        cart[currentIndex].amount += 1;
-        cart[currentIndex].price = product.price * cart[currentIndex].amount;
-        setAmount(amount + 1);
-        setCookies('cart', cart, { path: '/' });
-      } else {
-        setCart([...cart, {
-          id: location.state.productId,
-          amount: 1,
-          price: product.price
-        }]);
-        setCookies('cart', cart, { path: '/' });
-      }
-      setRefresh(!refresh);
-    } else {
-      toast({
-        title: 'Error!',
-        description: 'You must choose a size.',
-        status: 'error',
-        duration: 2000,
-        isClosable: true
-      });
-    }
-  };
-
-  const onClickRemoveCart = () => {
-    const currentIndex = cart.findIndex(item => item.id === location.state.productId);
-    if (currentIndex >= 0) {
-      if (cart[currentIndex].amount === 1) {
-        const newCart = new Array([]);
-        cart.forEach((item, index) => {
-          index !== currentIndex && newCart.push(item);
+    if (id) {
+      getProductById(id)
+        .then((result) => {
+          console.log("Fetched product by ID:", result);
+          setProduct(result.product); // Update state correctly
         })
-        if (cart.length === 1) {
-          removeCookie('cart', { path: '/' });
-        } else {
-          setCookies('cart', newCart, { path: '/' });
-        }
-        setInCart(false);
-        setCart(newCart);
-        setAmount(amount - 1);
-      } else {
-        cart[currentIndex].price -= cart[currentIndex].price / cart[currentIndex].amount;
-        cart[currentIndex].amount -= 1;
-        setAmount(amount - 1);
-        setCookies('cart', cart, { path: '/' });
-      }
+        .catch((error) => {
+          console.error('Error fetching product:', error);
+          setProduct(null); // Handle errors
+        });
     }
-    setRefresh(!refresh);
-  };
+  }, [id]);
 
-  const onClickWrite = () => {
-    if (have) {
-      onOpen(true);
-    } else {
-      toast({
-        title: 'Error!',
-        description: 'You must have this to write a review.',
-        status: 'error',
-        duration: 2000,
-        isClosable: true
-      });
-    }
-  };
+  if (!product) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -155,7 +172,7 @@ const Product = () => {
             <Image src={product.imageUrl} />
             <Box p={3} maxWidth={600} >
               <Text fontWeight={200} >Product Id: {location.state.productId}</Text>
-              <Text fontSize={30} >{product.name}</Text>
+              <Text fontSize={30} >{product.Name}</Text>
               <Box
                 display='flex'
                 alignItems='center'
@@ -196,13 +213,17 @@ const Product = () => {
                   inCart
                     ?
                     <Box display='flex' alignItems='center' width={{ base: '100%', sm: '40%' }} >
-                      <Button onClick={onClickRemoveCart} disabled={amount === 0} colorScheme='facebook'>-</Button>
+                      <Button 
+                      // onClick={onClickRemoveCart} 
+                      disabled={amount === 0} colorScheme='facebook'>-</Button>
                       <Text fontSize={25} px={2} width={{ base: '100%', sm: '60%' }} textAlign='center' >{amount}</Text>
-                      <Button onClick={onClickAddCart} colorScheme='facebook' >+</Button>
+                      <Button 
+                      // onClick={onClickAddCart} 
+                      colorScheme='facebook' >+</Button>
                     </Box>
                     :
                     <Button
-                      onClick={onClickAddCart}
+                      // onClick={onClickAddCart}
                       my={1}
                       me={{ base: 0, md: 2 }}
                       maxWidth={530}
@@ -213,7 +234,7 @@ const Product = () => {
                 }
                 <IconButton
                   icon={isFavorite ? <Favorite /> : <FavoriteBorder />}
-                  onClick={onClickFavorite}
+                  // onClick={onClickFavorite}
                   ml={1} my={1}
                   colorScheme='facebook'
                   variant='outline'
@@ -266,7 +287,9 @@ const Product = () => {
               </Box>
               <Text my={3} display='flex' alignItems='center' ><Info sx={{ fontSize: '16px', mr: 1 }} /> You must have purchased the product for write a review.  </Text>
             </Box>
-            <Button ml={2} mr={{ base: 0, md: 5 }} height={50} colorScheme='facebook' onClick={onClickWrite} >
+            <Button ml={2} mr={{ base: 0, md: 5 }} height={50} colorScheme='facebook' 
+            // onClick={onClickWrite} 
+            >
               Write a Review
             </Button>
           </Box>

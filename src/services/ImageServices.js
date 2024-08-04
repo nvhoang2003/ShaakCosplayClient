@@ -23,7 +23,7 @@ export const deleteImage = async (id) => {
 };
 
 export const getAllMiniImages = async () => {
-    const { data } = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/minis`);
+    const { data } = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/products`);
     return data;
 };
 

@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MenuItem } from '@chakra-ui/react';
 
-import { getCategoryByGenre } from '../services/CategoryServices';
+// import { getCategoryByGenre } from '../services/CategoryServices';
 
-const CategoryMenuItems = ({ genreId }) => {
+const CategoryMenuItems = ({ 
+    // genreId 
+}) => {
 
     // const [categories, setCategories] = useState([]);
     const categories = ["minh", "test"]
